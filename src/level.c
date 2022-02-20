@@ -1,4 +1,4 @@
-#include "..\inc\bomberman.h"
+#include "bomberman.h"
 
 int level_init(level_t* level, const uint32_t cols, const uint32_t rows, const uint32_t cell_size, int32_t* cells)
 {

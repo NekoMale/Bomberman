@@ -1,0 +1,8 @@
+﻿  main.c
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(102,54): warning C4244: '=': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(106,54): warning C4244: '=': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(110,53): warning C4244: '=': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(114,52): warning C4244: '=': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(167,37): warning C4244: '=': conversione da 'float' a 'int'. Possibile perdita di dati.
+C:\Users\danie\Documents\AIV_III\C\Bomberman\Bomberman\src\main.c(168,37): warning C4244: '=': conversione da 'float' a 'int'. Possibile perdita di dati.
+  Bomberman.vcxproj -> C:\Users\danie\Documents\AIV_III\C\Bomberman\x64\Debug\Bomberman.exe

@@ -21,7 +21,7 @@ CLOVE_TEST(MovableFixPositionY)
 	CLOVE_FLOAT_EQ(movable.y, 0);
 }
 
-CLOVE_TEST(MovableFixPositionWidth)
+CLOVE_TEST(MovableFixPositionWidthOnRight)
 {
 	level_t level;
 	int32_t map[] = { 0, 0, 0, 0 };
@@ -41,7 +41,7 @@ CLOVE_TEST(MovableFixPositionHeight)
 	CLOVE_FLOAT_EQ(movable.y, 28);
 }
 
-CLOVE_TEST(MovableWallFeetHit)
+CLOVE_TEST(MovableWallFeetHitOnRight)
 {
 	level_t level;
 	int32_t map[] = { 
@@ -54,7 +54,7 @@ CLOVE_TEST(MovableWallFeetHit)
 	CLOVE_FLOAT_EQ(movable.x, 96);
 }
 
-CLOVE_TEST(MovableWallNeckHit)
+CLOVE_TEST(MovableWallNeckHitOnRight)
 {
 	level_t level;
 	int32_t map[] = {
@@ -67,7 +67,7 @@ CLOVE_TEST(MovableWallNeckHit)
 	CLOVE_FLOAT_EQ(movable.x, 96);
 }
 
-CLOVE_TEST(MovableWallHit)
+CLOVE_TEST(MovableWallHitOnRight)
 {
 	level_t level;
 	int32_t map[] = { 0, 0x101, 0, 0 };
@@ -82,10 +82,10 @@ CLOVE_SUITE(MovableSuite)
 	CLOVE_SUITE_TESTS(
 		MovableFixPositionX,
 		MovableFixPositionY,
-		MovableFixPositionWidth,
+		MovableFixPositionWidthOnRight,
 		MovableFixPositionHeight,
-		MovableWallFeetHit,
-		MovableWallNeckHit,
-		MovableWallHit
+		MovableWallFeetHitOnRight,
+		MovableWallNeckHitOnRight,
+		MovableWallHitOnRight
 	);
 }
