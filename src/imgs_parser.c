@@ -127,10 +127,7 @@ int ng_parser_png_to_texture(char* png_content, Uint8 channels, SDL_Renderer* re
 			offset += 4;
 
 			Uint8* chunk_datas = SDL_malloc(chunk_length);
-			for (int i = 0; i < chunk_length; ++i)
-			{
-				SDL_memcpy(&(chunk_datas[i]), png_content + offset + i, 1);
-			}
+			SDL_memcpy(chunk_datas, png_content + offset, chunk_length);
 			offset += chunk_length;
 
 
@@ -189,8 +186,6 @@ int ng_parser_png_to_texture(char* png_content, Uint8 channels, SDL_Renderer* re
 		SDL_memcpy(&filterm, chunks[0].chunk_data + 11, 1);
 		SDL_memcpy(&interlacem, chunks[0].chunk_data + 12, 1);
 		SDL_Log("%s Chunk: bitd %d, colort %d, compm %d, filterm %d, interlacem %d", chunks[0].chunk_type, bitd, colort, compm, filterm, interlacem);
-
-		
 
 		unsigned char* IDAT_data = SDL_malloc(chunks[idat_index].chunk_length + 1);
 		SDL_memcpy(IDAT_data, chunks[idat_index].chunk_data, chunks[idat_index].chunk_length);
@@ -264,7 +259,7 @@ int ng_parser_png_to_texture(char* png_content, Uint8 channels, SDL_Renderer* re
 		}
 		SDL_free(chunks);
 		SDL_free(IDAT_data);
-		SDL_free(uncompressed_data);
+		//SDL_free(uncompressed_data);
 		SDL_free(recon);
 	}
 	else

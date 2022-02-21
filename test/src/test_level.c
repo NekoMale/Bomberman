@@ -1,3 +1,4 @@
+#define CLOVE_SUITE_NAME LevelSuite
 #include "..\inc\clove.h"
 #include "..\..\inc\bomberman.h"
 
@@ -67,20 +68,4 @@ CLOVE_TEST(LevelCellsOutOfBounds)
 	int32_t map[] = { 1, 2, 3, 4 };
 	level_init(&level, 2, 2, 1, map);
 	CLOVE_INT_EQ(level_cell(&level, 5, 5), -1);
-}
-
-CLOVE_SUITE(LevelSuite)
-{
-	CLOVE_SUITE_TESTS(
-		LevelInitializationNULL,
-		LevelInitializationZeroCols,
-		LevelInitializationZeroRows,
-		LevelInitializationZeroSize,
-		LevelInitializationNullCells,
-		LevelCellsNULL,
-		LevelCellsContent, 
-		LevelCellsOutOfBoundsCol, 
-		LevelCellsOutOfBoundsRow,
-		LevelCellsOutOfBounds
-	);
 }

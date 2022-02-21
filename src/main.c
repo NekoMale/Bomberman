@@ -175,9 +175,9 @@ int main(int argc, char** argv)
 
 	SDL_Log("End reached");
 quit:
-	//if (window) SDL_DestroyWindow(window);
-	//if (renderer) SDL_DestroyRenderer(renderer);
 	//if (texture) SDL_DestroyTexture(texture);
+	//if (renderer) SDL_DestroyRenderer(renderer);
+	//if (window) SDL_DestroyWindow(window);
 	SDL_Quit();
 	return 0;
 }
