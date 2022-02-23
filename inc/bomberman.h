@@ -33,11 +33,13 @@ int32_t move_on_level(level_t* level, movable_t* movable, const float delta_x, c
 
 typedef struct bomberman
 {
+	char ip_address[32];
 	movable_t movable;
 	uint32_t number_of_bombs;
 	uint32_t dropped_bombs;
 	uint32_t bomb_power;
 } bomberman_t;
+typedef bomberman_t* bomberman;
 
 // initialize a level structure
 int level_init(level_t* level, const uint32_t cols, const uint32_t rows, const uint32_t cell_size, int32_t* cells);

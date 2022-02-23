@@ -57,3 +57,7 @@ dkms.conf
 SDL2-2.0.20/
 zlib*
 *.vcxproj*
+x64/Debug/Bomberman.tlog/
+*.tlog
+*.tlog
+*.log

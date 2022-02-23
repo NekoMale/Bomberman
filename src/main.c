@@ -1,70 +1,40 @@
 #include <SDL.h>
 #include <stdio.h>
-#include "utils.h"
 #include "string.h"
 #include "imgs_parser.h"
 #include "bomberman.h"
 #include "level001.h"
+#include "udp_client.h"
+#include "linked_list.h"
 
-int parser_png(Uint8* imageContent, Uint8 channels, SDL_Renderer* renderer, SDL_Texture** texture)
-{
-	Uint8 alignment = 4;
-
-	Uint8* pixelsHead = imageContent + (*(imageContent + 10));
-
-	Uint32 width, height;
-	SDL_memcpy(&width, imageContent + 18, 4);
-	SDL_memcpy(&height, imageContent + 22, 4);
-
-	Uint32 rowSize = width * channels;
-	Uint32 paddedRowSize = (rowSize / alignment) * alignment;
-	if (rowSize % alignment != 0)
-	{
-		paddedRowSize += alignment;
-	}
-
-	*texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGR24, SDL_TEXTUREACCESS_STATIC, width, height);
-	if (!*texture)
-		return -1;
-
-	Uint8* pixels = SDL_malloc(width * height * channels);
-	if (!pixels)
-	{
-		SDL_free(*texture);
-		return -1;
-	}
-
-	Uint32 x = 0;
-	for (Sint32 y = height - 1; y > -1; --y)
-	{
-		SDL_memcpy(pixels + x * rowSize, pixelsHead + y * paddedRowSize, rowSize);
-		++x;
-	}
-	SDL_UpdateTexture(*texture, NULL, pixels, rowSize);
-	SDL_free(pixels);
-	return 0;
+int cmp_players(const void* o1, const void* o2) {
+	return strcmp(((const bomberman)o1)->ip_address, ((const bomberman)o2)->ip_address);
 }
 
 int main(int argc, char** argv)
 {
-
 	level_t level001;
 	level_init(&level001, 8, 8, 64, level001_cells);
 
 	bomberman_t player0;
-	player0.movable.x = 100;
-	player0.movable.y = 100;
+	player0.ip_address[0] = '\0';
+	player0.movable.x = -1;
+	player0.movable.y = -1;
 	player0.movable.width = 32;
 	player0.movable.height = 32;
 	player0.movable.speed = 48;
 
-	SDL_Init(SDL_INIT_VIDEO);
 
+	SDL_Init(SDL_INIT_VIDEO);
+	
+	ng_client_start();
+
+	ng_list players = ng_list_new(bomberman_t, cmp_players);
 	SDL_Window* window = SDL_CreateWindow("Bomberman", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, level001.cols * level001.cell_size, level001.rows * level001.cell_size, 0);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 	
 	SDL_Rect cell_rect = { 1, 1, level001.cell_size, level001.cell_size };
-	SDL_Rect player0_rect = { 1, 1, player0.movable.width, player0.movable.height };
+	SDL_Rect player0_rect = { -1, -1, player0.movable.width, player0.movable.height };
 	SDL_Rect prova_rect = { 1, 1, 32, 32 };
 
 	float delta_right = 0;
@@ -79,13 +49,13 @@ int main(int argc, char** argv)
 	if (ng_parser_bmp_to_texture(content, 3, renderer, &texture))
 		goto quit;
 
-
 	SDL_Texture* texture2;
 	char* png_content;
 	if (ng_utils_open_file("assets/basn6a08.png", &png_content))
 		goto quit;
 	if (ng_parser_png_to_texture(png_content, 4, renderer, &texture2))
 		goto quit;
+
 
 	int running = 1;
 	while (running)
@@ -136,7 +106,7 @@ int main(int argc, char** argv)
 		}
 		SDL_SetRenderDrawColor(renderer, 1, 1, 1, 0);
 		SDL_RenderClear(renderer);
-
+		
 		for (uint32_t row = 0; row < level001.rows; row++)
 		{
 			for (uint32_t col = 0; col < level001.cols; col++)
@@ -162,15 +132,37 @@ int main(int argc, char** argv)
 				}
 			}
 		}
-
+		
 		move_on_level(&level001, &player0.movable, delta_right + delta_left, delta_down + delta_up);
 		player0_rect.x = player0.movable.x;
 		player0_rect.y = player0.movable.y;
-		SDL_RenderCopy(renderer, texture, NULL, &player0_rect);
+		if(player0_rect.x > -1 && player0_rect.y > -1)
+			SDL_RenderCopy(renderer, texture, NULL, &player0_rect);
 		
-		SDL_RenderCopy(renderer, texture2, NULL, &prova_rect);
+		for (int i = 0; i < players->length; ++i)
+		{
+			//SDL_Log("Player: %d/%z\n", i, players->length);
+			bomberman other_player = (bomberman)ng_list_get_at(players, i);
+			SDL_Rect other_player_rect = { other_player->movable.x, other_player->movable.y, other_player->movable.width, other_player->movable.height};
+			
+			//SDL_Log("Rendering: %s %f %f\n", other_player->ip_address, other_player->movable.x, other_player->movable.y);
+			//printf("%d %d\n", player0_rect.x, player0_rect.y);
+			SDL_RenderCopy(renderer, texture, NULL, &other_player_rect);
+		}
 
+		SDL_RenderCopy(renderer, texture2, NULL, &prova_rect);
 		SDL_RenderPresent(renderer);
+		 
+		 
+		 
+		 
+		SDL_RenderPresent(renderer);
+		if (delta_right + delta_left != 0 || delta_down + delta_up != 0)
+		{
+			ng_client_send_position(player0.movable.x, player0.movable.y);
+		}
+		
+		ng_client_update(players, &player0);
 	}
 
 	SDL_Log("End reached");
