@@ -59,5 +59,4 @@ zlib*
 *.vcxproj*
 x64/Debug/Bomberman.tlog/
 *.tlog
-*.tlog
 *.log
