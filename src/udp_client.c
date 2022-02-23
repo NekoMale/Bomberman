@@ -98,7 +98,7 @@ int __ng_client_update(ng_list players, bomberman_t* local_player)
 		int found = -1;
 		for (int i = 0; i < players->length; ++i)
 		{
-			bomberman other_player = (bomberman)(players->nodes[i]->data);
+			bomberman other_player = (bomberman)ng_list_get_at(players, i);
 			if (strcmp(other_player->ip_address, other_player_ip_address) == 0)
 			{
 				other_player->movable.x = other_player_x;
@@ -120,8 +120,11 @@ int __ng_client_update(ng_list players, bomberman_t* local_player)
 			other_player->movable.speed = 48;
 
 			ng_list_add(players, other_player);
-			bomberman prova = (bomberman)ng_list_get_at(players, 0);
-			printf("New player position received %s (%f, %f)\n", prova->ip_address, prova->movable.x, prova->movable.y);
+			//bomberman prova = (bomberman)players->nodes[players->length-1]->data;
+			//printf("New player position received %s (%f, %f)\n", prova->ip_address, prova->movable.x, prova->movable.y);
+			//free(other_player);
+			//other_player = NULL;
+
 		}
 
 		//printf("Package received %s (%f, %f)\n", other_player_ip_address, other_player_x, other_player_y);
